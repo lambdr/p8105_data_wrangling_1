@@ -2,7 +2,7 @@
 title: "Data Wrangling I"
 output: github_document
 ---
-
+# Data Import
 Load necessary packages for this file.
 ```{r load packages, message = FALSE}
 library(tidyverse)
@@ -34,3 +34,43 @@ litters_df_absolute =
 ```
 
 Don't use absolute paths. It makes your life more complicated when you try to move/rename/distribute your work.
+
+### Learning Assessment
+
+I will load in info about the pups using relative pathing.
+```{r load pups_df}
+pups_df = 
+  read_csv("data/FAS_pups.csv")
+
+# Clean column names
+pups_df = 
+  janitor::clean_names(pups_df)
+
+pups_df
+```
+
+## Look at data
+
+```{r}
+litters_df
+
+head(litters_df)
+
+tail(litters_df)
+```
+
+You can use `view`. But don't include in RMD files, use in command line/non-executed code.
+```{r view, eval = FALSE}
+# Pops open another window, weird interactions with 'knit'
+view(litters_df)
+```
+
+
+Look at data structure.
+```{r}
+str(litters_df)
+
+skimr::skim(litters_df)
+```
+
+
