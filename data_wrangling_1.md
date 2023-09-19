@@ -325,3 +325,14 @@ pulse_df =
 
 view(pulse_df)
 ```
+
+## Base R…
+
+These exist and you may see them online.
+
+``` r
+litters_df = 
+  read.csv("data/FAS_litters.csv")
+
+litters_df$Gr
+```
