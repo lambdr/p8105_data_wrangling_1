@@ -7,6 +7,11 @@ Load necessary packages for this file.
 
 ``` r
 library(tidyverse)
+
+# Excel and SAS files require separate packages
+# readxl is for Excel and haven is for SAS
+library(readxl)
+library(haven)
 ```
 
 Let’s import the `FAS_litters.csv` csv ysubg a relative path.
@@ -151,6 +156,7 @@ view(litters_df)
 Look at data structure.
 
 ``` r
+# Gives structure of data set
 str(litters_df)
 ```
 
@@ -177,6 +183,7 @@ str(litters_df)
     ##  - attr(*, "problems")=<externalptr>
 
 ``` r
+# Basic values with histograms for numeric data
 skimr::skim(litters_df)
 ```
 
@@ -211,3 +218,110 @@ Data summary
 | pups_born_alive |         0 |          1.00 |  7.35 | 1.76 |  3.0 |  6.00 |  8.00 |  8.00 | 11.0 | ▁▃▂▇▁ |
 | pups_dead_birth |         0 |          1.00 |  0.33 | 0.75 |  0.0 |  0.00 |  0.00 |  0.00 |  4.0 | ▇▂▁▁▁ |
 | pups_survive    |         0 |          1.00 |  6.41 | 2.05 |  1.0 |  5.00 |  7.00 |  8.00 |  9.0 | ▁▃▂▇▇ |
+
+## Options in `read_*`
+
+``` r
+# Focus on col_names, col_types, na, and skip
+# col_names T/F is whether the first read row is names
+# skip is how many rows to skip before read starts
+litters_df = 
+  read_csv(
+    "data/FAS_litters.csv",
+    skip = 10, col_names = FALSE)
+```
+
+    ## Rows: 40 Columns: 8
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr (2): X1, X2
+    ## dbl (6): X3, X4, X5, X6, X7, X8
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
+# na adds any values to missing values
+
+litters_df = 
+  read_csv(
+    "data/FAS_litters.csv",
+    na = c("NA", 19)
+      )
+```
+
+    ## Rows: 49 Columns: 8
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr (2): Group, Litter Number
+    ## dbl (6): GD0 weight, GD18 weight, GD of Birth, Pups born alive, Pups dead @ ...
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
+# col_types forces certain columns to 
+
+litters_df = 
+  read_csv(
+    "data/FAS_litters.csv",
+    col_types = 
+      cols(
+        `GD0 weight` = col_character(), Group = col_factor()
+      ))
+
+litters_df
+```
+
+    ## # A tibble: 49 × 8
+    ##    Group `Litter Number` `GD0 weight` `GD18 weight` `GD of Birth`
+    ##    <fct> <chr>           <chr>                <dbl>         <dbl>
+    ##  1 Con7  #85             19.7                  34.7            20
+    ##  2 Con7  #1/2/95/2       27                    42              19
+    ##  3 Con7  #5/5/3/83/3-3   26                    41.4            19
+    ##  4 Con7  #5/4/2/95/2     28.5                  44.1            19
+    ##  5 Con7  #4/2/95/3-3     <NA>                  NA              20
+    ##  6 Con7  #2/2/95/3-2     <NA>                  NA              20
+    ##  7 Con7  #1/5/3/83/3-3/2 <NA>                  NA              20
+    ##  8 Con8  #3/83/3-3       <NA>                  NA              20
+    ##  9 Con8  #2/95/3         <NA>                  NA              20
+    ## 10 Con8  #3/5/2/2/95     28.5                  NA              20
+    ## # ℹ 39 more rows
+    ## # ℹ 3 more variables: `Pups born alive` <dbl>, `Pups dead @ birth` <dbl>,
+    ## #   `Pups survive` <dbl>
+
+## Other file types
+
+Excel files are special and require their own special package: `readxl`.
+
+``` r
+mlb_df =
+  read_excel("data/mlb11.xlsx")
+
+mlb_df
+```
+
+    ## # A tibble: 30 × 12
+    ##    team        runs at_bats  hits homeruns bat_avg strikeouts stolen_bases  wins
+    ##    <chr>      <dbl>   <dbl> <dbl>    <dbl>   <dbl>      <dbl>        <dbl> <dbl>
+    ##  1 Texas Ran…   855    5659  1599      210   0.283        930          143    96
+    ##  2 Boston Re…   875    5710  1600      203   0.28        1108          102    90
+    ##  3 Detroit T…   787    5563  1540      169   0.277       1143           49    95
+    ##  4 Kansas Ci…   730    5672  1560      129   0.275       1006          153    71
+    ##  5 St. Louis…   762    5532  1513      162   0.273        978           57    90
+    ##  6 New York …   718    5600  1477      108   0.264       1085          130    77
+    ##  7 New York …   867    5518  1452      222   0.263       1138          147    97
+    ##  8 Milwaukee…   721    5447  1422      185   0.261       1083           94    96
+    ##  9 Colorado …   735    5544  1429      163   0.258       1201          118    73
+    ## 10 Houston A…   615    5598  1442       95   0.258       1164          118    56
+    ## # ℹ 20 more rows
+    ## # ℹ 3 more variables: new_onbase <dbl>, new_slug <dbl>, new_obs <dbl>
+
+Lets import a SAS file.
+
+``` r
+pulse_df = 
+  read_sas("data/public_pulse_data.sas7bdat")
+
+view(pulse_df)
+```

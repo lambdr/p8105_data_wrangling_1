@@ -6,6 +6,11 @@ output: github_document
 Load necessary packages for this file.
 ```{r load packages, message = FALSE}
 library(tidyverse)
+
+# Excel and SAS files require separate packages
+# readxl is for Excel and haven is for SAS
+library(readxl)
+library(haven)
 ```
 
 Let's import the `FAS_litters.csv` csv ysubg a relative path.
@@ -68,9 +73,63 @@ view(litters_df)
 
 Look at data structure.
 ```{r}
+# Gives structure of data set
 str(litters_df)
 
+# Basic values with histograms for numeric data
 skimr::skim(litters_df)
 ```
 
+## Options in `read_*`
+
+```{r options in read_csv}
+# Focus on col_names, col_types, na, and skip
+# col_names T/F is whether the first read row is names
+# skip is how many rows to skip before read starts
+litters_df = 
+  read_csv(
+    "data/FAS_litters.csv",
+    skip = 10, col_names = FALSE)
+
+# na adds any values to missing values
+
+litters_df = 
+  read_csv(
+    "data/FAS_litters.csv",
+    na = c("NA", 19)
+      )
+
+# col_types forces certain columns to 
+
+litters_df = 
+  read_csv(
+    "data/FAS_litters.csv",
+    col_types = 
+      cols(
+        `GD0 weight` = col_character(), Group = col_factor()
+      ))
+
+litters_df
+```
+
+## Other file types
+
+Excel files are special and require their own special package: `readxl`.
+
+```{r practice with readxl}
+
+mlb_df =
+  read_excel("data/mlb11.xlsx")
+
+mlb_df
+
+```
+
+Lets import a SAS file.
+```{r}
+pulse_df = 
+  read_sas("data/public_pulse_data.sas7bdat")
+
+view(pulse_df)
+```
 
