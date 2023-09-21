@@ -65,4 +65,56 @@ select(pups_df, litter_number, sex, pd_ears)
 
 ```
 
+## `filter`
+
+Get rid of rows using `filter.
+```{r filter}
+# basic boolean logic
+filter(litters_df, group == "Con7")
+filter(litters_df, group != "Con7")
+filter(litters_df, gd0_weight <= 20)
+
+# or is "|"
+filter(litters_df, group == "Con7" | group == "Con8")
+filter(litters_df, group %in% c("Con7", "Con8"))
+
+# negation
+filter(litters_df, !(group == "Con7"))
+```
+
+
+### missing data
+
+``` {r missing data}
+# remove all columns with missing values
+drop_na(litters_df)
+
+# one column
+drop_na(litters_df, gd0_weight)
+
+```
+
+#### Learning Assessment
+
+```{r}
+filter(pups_df, sex == 1)
+```
+
+
+
+## `mutate`
+
+```{r mutation}
+
+mutate(litters_df, wt_gain = gd18_weight - gd0_weight)
+
+# convert variable to lowercase
+mutate(litters_df, group = str_to_lower(group))
+
+mutate(
+  litters_df,
+  wt_gain = gd18_weight - gd0_weight,
+  group = str_to_lower(group)
+)
+```
 
