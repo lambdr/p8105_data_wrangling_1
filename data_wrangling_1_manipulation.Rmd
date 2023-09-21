@@ -83,7 +83,7 @@ filter(litters_df, !(group == "Con7"))
 ```
 
 
-### missing data
+### Missing data
 
 ``` {r missing data}
 # remove all columns with missing values
@@ -116,5 +116,36 @@ mutate(
   wt_gain = gd18_weight - gd0_weight,
   group = str_to_lower(group)
 )
+```
+
+## `arrange`
+
+`arrange` sorts rows. It isn't useful for analyses, but is good for EDA.
+
+```{r}
+# one variable, sorting rows
+arrange(litters_df, gd0_weight)
+
+# two variables, in sequence
+arrange(litters_df, group, gd0_weight)
+```
+
+
+# Pipes
+
+```{r}
+litters_df = 
+  read_csv("data/FAS_litters.csv") |> 
+  janitor::clean_names() |> 
+  select(-starts_with("pups")) |> 
+  mutate(
+    group = str_to_lower(group),
+    wt_gain = gd18_weight - gd0_weight
+  ) |> 
+  drop_na(wt_gain) |> 
+  arrange(group, wt_gain) 
+
+view(litters_df)
+  
 ```
 
