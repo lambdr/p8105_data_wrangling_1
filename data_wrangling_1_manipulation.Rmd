@@ -1,0 +1,6 @@
+---
+title: "Data Wrangling I Manipulation"
+author: "Derek Lamb"
+date: "`r Sys.Date()`"
+output: github_document
+---
