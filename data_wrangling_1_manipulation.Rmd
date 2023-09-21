@@ -1,6 +1,68 @@
 ---
-title: "Data Wrangling I Manipulation"
+title: "Data Manipulation"
 author: "Derek Lamb"
 date: "`r Sys.Date()`"
 output: github_document
 ---
+
+First, load all necessary packages.
+```{r load packages, message = FALSE}
+library(tidyverse)
+```
+
+Import FAS litters and pups.
+```{r import, message = 0}
+# FAS Litters
+litters_df =
+  read_csv("data/FAS_litters.csv")
+litters_df = janitor::clean_names(litters_df)
+
+#FAS Pups
+pups_df = 
+  read_csv("data/FAS_pups.csv")
+pups_df = janitor::clean_names(pups_df)
+```
+
+## `select`
+
+`select` is used to select columns!
+```{r select, message = FALSE}
+# basic
+select(litters_df, gd0_weight, group)
+
+# colon selects range
+select(litters_df, group, gd0_weight:gd_of_birth)
+
+# starts_with
+select(litters_df, group, starts_with("pups")) # also ends_with, contains
+
+# remove columns
+select(litters_df, -litter_number)
+select(litters_df, -starts_with("gd"))
+
+# rename variables
+select(litters_df, group, litter_id = litter_number)
+
+# everything()
+select(litters_df, group, litter_id = litter_number, everything())
+select(litters_df, gd0_weight, everything())
+
+```
+
+#### `select` vs `pull`
+`select` outputs a dataframe, whereas `pull` creates a vector.
+```{r select v pull, message = FALSE}
+select(litters_df, group)
+
+pull(litters_df, group)
+```
+
+## Learning Assessment
+
+```{r learning assessment - select, message = FALSE}
+
+select(pups_df, litter_number, sex, pd_ears)
+
+```
+
+
