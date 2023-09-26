@@ -6,7 +6,54 @@ output: github_document
 ---
 
 Load all necessary packages.
-```{r load pacakges}
+```{r load pacakges, message = FALSE}
 library(tidyverse)
+library(haven)
+```
+
+## PULSE data
+
+```{r import data}
+# Load and convert from wide to long format
+pulse_df <- read_sas("data/public_pulse_data.sas7bdat") |> 
+  janitor::clean_names() |> 
+  pivot_longer(
+    bdi_score_bl:bdi_score_12m,
+    names_to = "time",
+    values_to = "bdi_score",
+    names_prefix = "bdi_score_"
+  ) |> 
+  
+# Recode baseline to 0 months
+  mutate(
+    time = replace(time, time == "bl", "00m")
+  )
+  
+pulse_df
+```
+
+We observe that the BDI is long not wide and so used `pivot_longer` to make it long.
+
+### Learning Assessment
+
+```{r la litters}
+litters_df <- read_csv("data/FAS_litters.csv") |> 
+  janitor::clean_names() |> 
+  pivot_longer(
+    gd0_weight:gd18_weight,
+    names_to = "gestational_day",
+    values_to = "weight"
+               ) |> 
+  mutate(
+    gestational_day = 
+      replace(gestational_day, 
+              gestational_day == "gd0_weight",0 ),
+    gestational_day = 
+      replace(gestational_day, 
+              gestational_day == "gd18_weight",18 )
+    )
+  
+  
+litters_df
 ```
 
