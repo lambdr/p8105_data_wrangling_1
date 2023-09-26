@@ -1,0 +1,12 @@
+---
+title: 'Data Wrangling 1: Tidy Data'
+author: "Derek Lamb"
+date: "`r Sys.Date()`"
+output: github_document
+---
+
+Load all necessary packages.
+```{r load pacakges}
+library(tidyverse)
+```
+
