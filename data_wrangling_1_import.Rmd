@@ -13,7 +13,7 @@ library(readxl)
 library(haven)
 ```
 
-Let's import the `FAS_litters.csv` csv ysubg a relative path.
+Let's import the `FAS_litters.csv` csv using a relative path.
 ```{r data import}
 #Load in using read_csv
 litters_df =
